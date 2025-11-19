@@ -16,7 +16,7 @@ app.use(cors({
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(morgan())
+app.use(morgan("dev"))
 app.use(helmet({
     crossOriginResourcePolicy:false
 }))
@@ -34,9 +34,10 @@ app.get("/",(request,response)=>{
 
 app.use('/api/user' , userRouter)
 
-connectDB()
 
 
-app.listen(PORT,()=>{
-    console.log("Server is running",PORT)
+connectDB().then(()=>{
+    app.listen(PORT , ()=>{
+        console.log("Server is running ",PORT)
+    })
 })

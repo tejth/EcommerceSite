@@ -1,10 +1,12 @@
 import sendEmail from "../config/sendEmail.js"
 import UserModel from "../models/user.model.js"
 import bcryptjs from "bcryptjs"
+import verifyEmailTemplate from "../utils/verifyEmailTemplate.js"
 
 export async function registerUserController(request , response){
     try {
-        const {name , email , password} = request.body
+       const { name, email, password } = request.body || {}
+
 
         if(!name || !email || !password){
             return response.status(400).json({
@@ -52,6 +54,7 @@ export async function registerUserController(request , response){
         })
 
 
+        
         return response.json({
             message : "User register successfully",
             error : false,
