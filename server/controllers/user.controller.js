@@ -118,6 +118,17 @@ export async function loginController(request, response){
 
         const user = await UserModel.findOne({email})
 
+
+
+        if (!email || !password) {
+            return response.status(400).json({
+                message: "Provide email and password",
+                error: true,
+                success: false
+            });
+        }
+
+
         if(!user){
             return response.status(400).json({
                 message: "User not registered",
