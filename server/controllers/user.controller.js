@@ -114,7 +114,7 @@ export async function verifyEmailController(request,response){
 export async function loginController(request, response){
     try {
 
-        const {email , password} = request.body
+        const {email , password} = request.body || {}
 
         const user = await UserModel.findOne({email})
 
