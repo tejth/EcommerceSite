@@ -2,6 +2,8 @@ import sendEmail from "../config/sendEmail.js"
 import UserModel from "../models/user.model.js"
 import bcryptjs from "bcryptjs"
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js"
+import generatedAccessToken from "../utils/generatedAccessTokens.js"
+import generatedRefreshToken from "../utils/generatedRefereshToken.js"
 
 export async function registerUserController(request , response){
     try {
@@ -108,3 +110,67 @@ export async function verifyEmailController(request,response){
 }
 
 
+//login controller
+export async function loginController(request, response){
+    try {
+
+        const {email , password} = request.body
+
+        const user = await UserModel.findOne({email})
+
+        if(!user){
+            return response.status(400).json({
+                message: "User not registered",
+                error : true,
+                success:false
+            })
+        }
+
+        if(user.status !== "Active"){
+            return response.status(400).json({
+                message : "Contact to admin!",
+                error: true,
+                success: false
+            })
+        }
+
+
+        const checkPassword = await bcryptjs.compare(password,user.password)
+
+        if(!checkPassword){
+            return response.status(400).json({
+                message: "Check you password",
+                error:true,
+                success:false
+            })
+        }
+
+        const accesstoken = await generatedAccessToken(user._id)
+        const refreshToken = await generatedRefreshToken(user._id)
+
+        const cookiesOption = {
+            httpOnly : true,
+            secure : true,
+            sameSite : "None"
+        }
+        response.cookie('accessToken',accesstoken,cookiesOption)
+        response.cookie('refreshToken',refreshToken,cookiesOption)
+
+        return response.json({
+            message:"Login successfull!",
+            error:false,
+            success:true,
+            data:{
+                accesstoken,
+                refreshToken
+            }
+        })
+        
+    } catch (error) {
+        return response.status(500).json({
+            message : error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
