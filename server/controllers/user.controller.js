@@ -188,36 +188,31 @@ export async function loginController(request, response){
 
 
 //logout controller
-export async function logoutController(request,response){
-    try {
+// logout controller
+export async function logoutController(request, response) {
+  try {
 
-        
+    const cookiesOption = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None"
+    };
 
+    // FIXED COMMA HERE
+    response.clearCookie("accessToken", cookiesOption);
+    response.clearCookie("refreshToken", cookiesOption);
 
-         const cookiesOption = {
-            httpOnly : true,
-            secure : true,
-            sameSite : "None"
-        }
+    return response.json({
+      message: "Logout Successfully!!",
+      error: false,
+      success: true
+    });
 
-        response.clearCookie("accessToken". cookiesOption)
-        response.clearCookie("refreshToken" , cookiesOption)
-
-
-
-
-        return response.json({
-            message:"Logout Successfully!!",
-            error:false,
-            success:true
-        })
-       
-        
-    } catch (error) {
-         return response.status(500).json({
-            message : error.message || error,
-            error: true,
-            success: false
-        })
-    }
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    });
+  }
 }
