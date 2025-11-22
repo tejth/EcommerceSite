@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const auth = (request, response, next) => {
+const auth = async(request, response, next) => {
   try {
     const token =
       request.cookies?.accessToken ||
@@ -15,12 +15,22 @@ const auth = (request, response, next) => {
     }
 
     // Verify token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN);
+    const decode = await jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN);
+
+    console.log('decode' , decode);
+
+    if(!decode){
+      return response.status(401).json({
+        message: "unauthorized access",
+        error : true,
+        success : false
+      })
+    }
 
     // Attach decoded user data to request object
-    request.user = decoded;
+    request.userId = decode.id
 
-    console.log("Verified token:", decoded);
+   
 
     next(); // <--- IMPORTANT
   } catch (error) {

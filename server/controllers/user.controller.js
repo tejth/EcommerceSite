@@ -4,7 +4,8 @@ import bcryptjs from "bcryptjs"
 import verifyEmailTemplate from "../utils/verifyEmailTemplate.js"
 import generatedAccessToken from "../utils/generatedAccessTokens.js"
 import generatedRefreshToken from "../utils/generatedRefereshToken.js"
-
+import uploadImageClodinary from "../utils/uploadImageClodinary.js"
+                                                                                                                                                                                                                                                                                                                                                                              
 export async function registerUserController(request , response){
     try {
        const { name, email, password } = request.body || {}
@@ -45,7 +46,6 @@ export async function registerUserController(request , response){
 
         const VerifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save?._id}`
 
-
         const verifyEmail = await sendEmail({
              sendTo : email ,
              subject : "Verify email from TusharElectricals",
@@ -54,8 +54,6 @@ export async function registerUserController(request , response){
                 url : VerifyEmailUrl
              })
         })
-
-
         
         return response.json({
             message : "User register successfully",
@@ -187,12 +185,12 @@ export async function loginController(request, response){
 }
 
 
-//logout controller
+
 // logout controller
 export async function logoutController(request, response) {
   try {
 
-    const userid = request.userid  //middleware
+    const userid = request.userId  //middleware
 
     const cookiesOption = {
       httpOnly: true,
@@ -212,6 +210,46 @@ export async function logoutController(request, response) {
       message: "Logout Successfully!!",
       error: false,
       success: true
+    });
+
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    });
+  }
+}
+
+
+
+//upload avatar
+export async function uploadAvatar(request, response) {
+  try {
+
+    const userId = request.userId; // auth middleware
+    const image = request.file; // multer middleware
+
+    if (!image) {
+      return response.status(400).json({
+        message: "Image is required",
+        error: true,
+        success: false
+      });
+    }
+
+    const upload = await uploadImageClodinary(image);
+
+    const updateUser = await UserModel.findByIdAndUpdate(userId, {
+      avatar: upload.url
+    });
+
+    return response.json({
+      message: "Uploaded profile!",
+      data: {
+        _id: userId,
+        avatar: upload.url
+      }
     });
 
   } catch (error) {
