@@ -423,3 +423,62 @@ export async function verifyForgotPasswordOtp(request , response){
         });
     }
 }
+
+
+
+//reset the password
+export async function resetpassword(request, response) {
+    try {
+        const { email, newPassword, confirmPassword } = request.body;
+
+        if (!email || !newPassword || !confirmPassword) {
+            return response.status(400).json({
+                message: "Provide required fields: email, newPassword, confirmPassword",
+                error: true,
+                success: false
+            });
+        }
+
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return response.status(400).json({
+                message: "Email is not available!",
+                error: true,
+                success: false
+            });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return response.status(400).json({
+                message: "newPassword and confirmPassword do not match!",
+                error: true,
+                success: false
+            });
+        }
+
+        // hash password
+        const salt = await bcryptjs.genSalt(10);
+        const hashPassword = await bcryptjs.hash(newPassword, salt);
+
+        // update password
+        await UserModel.findByIdAndUpdate(user._id, {
+            password: hashPassword,
+            forgot_password_otp: "",
+            forgot_password_expiry: ""
+        });
+
+        return response.status(200).json({
+            message: "Password updated successfully!",
+            error: false,
+            success: true
+        });
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        });
+    }
+}
