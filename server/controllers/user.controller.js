@@ -5,6 +5,8 @@ import verifyEmailTemplate from "../utils/verifyEmailTemplate.js"
 import generatedAccessToken from "../utils/generatedAccessTokens.js"
 import generatedRefreshToken from "../utils/generatedRefereshToken.js"
 import uploadImageClodinary from "../utils/uploadImageClodinary.js"
+import generatedOtp from "../utils/generatedOtp.js"
+import forgotPasswordTemplate from "../utils/forgotPasswordTemplate.js"
                                                                                                                                                                                                                                                                                                                                                                               
 export async function registerUserController(request , response){
     try {
@@ -290,7 +292,7 @@ export async function updateUserDetails(request,response){
             error : false,
             success : true,
             data : updateUser
-        })
+        }) 
 
     } catch (error) {
         return response.status(500).json({
@@ -298,5 +300,61 @@ export async function updateUserDetails(request,response){
             error: true,
             success: false
         })
+    }
+}
+
+
+
+// forgot password
+export async function forgotPasswordController(request, response) {
+    try {
+        const { email } = request.body;
+
+        // Check if user exists
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            return response.status(400).json({
+                message: "Email not available",
+                error: true,
+                success: false
+            });
+        }
+
+        // Generate OTP & expiry time (1 hour)
+        const otp = generatedOtp();
+        const expireTime = Date.now() + 60 * 60 * 1000;
+
+        // Save OTP & expiry
+        await UserModel.findByIdAndUpdate(
+            user._id,
+            {
+                forgot_password_otp: otp,
+                forgot_password_expiry: new Date(expireTime).toISOString()
+            },
+            { new: true }
+        );
+
+        // Send email
+        await sendEmail({
+            sendTo: email,
+            subject: "Forgot password from TusharElectricals",
+            html: forgotPasswordTemplate({
+                name: user.name,
+                otp: otp
+            })
+        });
+
+        return response.json({
+            message: "Check your email!",
+            error: false,
+            success: true
+        });
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        });
     }
 }
