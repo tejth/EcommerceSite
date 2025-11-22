@@ -7,7 +7,9 @@ import generatedRefreshToken from "../utils/generatedRefereshToken.js"
 import uploadImageClodinary from "../utils/uploadImageClodinary.js"
 import generatedOtp from "../utils/generatedOtp.js"
 import forgotPasswordTemplate from "../utils/forgotPasswordTemplate.js"
-                                                                                                                                                                                                                                                                                                                                                                              
+import jwt from "jsonwebtoken"
+
+
 export async function registerUserController(request , response){
     try {
        const { name, email, password } = request.body || {}
@@ -472,6 +474,60 @@ export async function resetpassword(request, response) {
             message: "Password updated successfully!",
             error: false,
             success: true
+        });
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        });
+    }
+}
+
+
+
+//refresh token controller
+export async function refreshToken(request, response) {
+    try {
+
+        const authHeader = request.headers.authorization;
+        const refreshToken =
+            request.cookies.refreshToken ||
+            (authHeader && authHeader.startsWith("Bearer ") && authHeader.split(" ")[1]);
+
+        if (!refreshToken) {
+            return response.status(401).json({
+                message: "Invalid Token!",
+                error: true,
+                success: false
+            });
+        }
+
+        const verifyToken = jwt.verify(
+            refreshToken,
+            process.env.SECRET_KEY_REFRESH_TOKEN
+        );
+
+        const userId = verifyToken?._id;
+
+        const newAccessToken = await generatedAccessToken(userId);
+
+        const cookiesOption = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None"
+        };
+
+        response.cookie("accessToken", newAccessToken, cookiesOption);
+
+        return response.json({
+            message: "New access token generated",
+            error: false,
+            success: true,
+            data: {
+                accessToken: newAccessToken
+            }
         });
 
     } catch (error) {
