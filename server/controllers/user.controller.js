@@ -451,7 +451,7 @@ export async function resetpassword(request, response) {
 
         if (newPassword !== confirmPassword) {
             return response.status(400).json({
-                message: "newPassword and confirmPassword do not match!",
+                message: "newPassword and confirmPassword must match!",
                 error: true,
                 success: false
             });
