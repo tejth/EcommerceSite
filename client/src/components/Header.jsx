@@ -1,7 +1,7 @@
 import React from 'react'
 import logo from "../assets/logo.png"
 import Search from './Search'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {FaRegCircleUser} from "react-icons/fa6"
 import useMobile from '../hooks/useMobile'
 import { BsCart4 } from "react-icons/bs";
@@ -12,7 +12,11 @@ const Header = () => {
   const [isMobile] = useMobile()
   const location = useLocation()
   const isSearchPage = location.pathname === '/search'
+  const navigate = useNavigate();
 
+  const redirectToLoginPage = ()=>{
+       navigate('/login')
+  }
   
 
   return (
@@ -66,7 +70,7 @@ const Header = () => {
 
                   {/* Desktop  */}
                   <div className='hidden lg:flex items-center gap-10'>
-                    <Link to={"/login"}>Login</Link>
+                    <button className='text-lg px-2' onClick={redirectToLoginPage}>Login</button>
                     <button className='flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-3 rounded text-white'>
                       {/* add to cart icons  */}
                       <div className='animate-bounce'>
