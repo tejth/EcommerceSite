@@ -4,6 +4,8 @@ import Search from './Search'
 import { Link, useLocation } from 'react-router-dom'
 import {FaRegCircleUser} from "react-icons/fa6"
 import useMobile from '../hooks/useMobile'
+import { BsCart4 } from "react-icons/bs";
+
 
 const Header = () => {
 
@@ -56,16 +58,27 @@ const Header = () => {
 
                 {/* login and my cart   */}
                 <div className=''>
+
+                  {/* user icons display in only mobile version  */}   
                   <button className='text-neutral-600 lg:hidden'>
                     <FaRegCircleUser size={26}/>
                   </button>
-                  <div className='hidden lg:block'>
-                    Login and my cart
+
+                  {/* Desktop  */}
+                  <div className='hidden lg:flex items-center gap-10'>
+                    <Link to={"/login"}>Login</Link>
+                    <button className='flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-3 rounded text-white'>
+                      {/* add to cart icons  */}
+                      <div className='animate-bounce'>
+                           <BsCart4 size={26}/>
+                      </div>
+                      <div className='font-semibold'>
+                        <p>My Cart</p>
+                      </div>
+                    </button>
                   </div>
-                </div>
-                
-                  
-                  </div>  
+                </div>   
+              </div>  
           )
 
         }
