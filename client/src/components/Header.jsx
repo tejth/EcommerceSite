@@ -22,7 +22,7 @@ const Header = () => {
   return (
 
 
-    <header className='h-24 lg:h-20 lg:shadow-md sticky top-0 flex flex-col justify-center gap-1'>
+    <header className='bg-white h-24 lg:h-20 lg:shadow-md sticky top-0 flex flex-col justify-center gap-1'>
         {
           !(isSearchPage && isMobile) && (
 
