@@ -1,6 +1,12 @@
 import React,{useState} from 'react'
 import {FaRegEyeSlash} from 'react-icons/fa6'
 import {FaRegEye} from 'react-icons/fa6'
+import toast from 'react-hot-toast'
+import Axios from '../utils/Axios'
+import SummaryApi from '../common/SummaryApi'
+import AxiosTostError from '../utils/AxiosTostError'
+import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 const Register = () => {
@@ -14,7 +20,7 @@ const Register = () => {
 
    const [showPassword , setShowPassword] = useState(false)
    const [showConfirmPassword , setShowConfirmPassword] = useState(false)
-    
+   const navigate = useNavigate()
 
  
    const handleChange = (e)=>{
@@ -32,8 +38,47 @@ const Register = () => {
    const validValue = Object.values(data).every(el => el)
 
 
-   const handleSubmit = (e)=>{
+   const handleSubmit = async(e)=>{
          e.preventDefault()
+
+         if(data.password !== data.confirmPassword){
+             toast.error(
+              "password and confirm password must be same"
+             )
+             return
+         }
+
+
+         try {
+            const response = await Axios({
+              ...SummaryApi.register,
+              data: data
+           })
+
+           if(response.data.error){
+            toast.error(response.data.message)
+           }
+
+           if(response.data.success){
+            toast.success(response.data.message)
+            setData({
+              name: "",
+              email: "",
+              password: "",
+              confirmPassword:""
+            })
+
+            navigate("/login")
+           }
+
+          
+         } catch (error) {
+          AxiosTostError(error)
+         }
+
+         
+
+
    }
 
 
@@ -95,16 +140,16 @@ const Register = () => {
                 </div>
 
 
-                <button className={` ${validValue ? "hover:bg-green-700 bg-green-800": "bg-gray-500"}  text-white py-2 rounded my-3 tracking-wide  font-semibold `}>
+                <button disabled={!validValue} className={` ${validValue ? "hover:bg-green-700 bg-green-800": "bg-gray-500"}  text-white py-2 rounded my-3 tracking-wide  font-semibold `}>
                   Register
                 </button>
 
-
-
-
-                
-
               </form>
+
+
+              <p>
+                Already have account ? <Link className='font-semibold text-green-700 hover:text-green-800' to={"/login"}>Login</Link>
+              </p>
            </div>
     </section>
   )
