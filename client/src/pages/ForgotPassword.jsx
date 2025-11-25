@@ -9,14 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 
-const Login = () => {
+const ForgotPassword = () => {
    const [data,setData] = useState({
     email: "",
-    password: "",
    })
 
 
-   const [showPassword , setShowPassword] = useState(false)
    const navigate = useNavigate()
 
  
@@ -41,7 +39,7 @@ const Login = () => {
 
          try {
             const response = await Axios({
-              ...SummaryApi.login,
+              ...SummaryApi.forgot_password,
               data: data
            })
 
@@ -53,10 +51,9 @@ const Login = () => {
             toast.success(response.data.message)
             setData({
               email: "",
-              password: "",
             })
 
-            navigate("/")
+            navigate("/verification-otp")
            }
 
           
@@ -74,6 +71,8 @@ const Login = () => {
   return (
     <section className='w-full container mx-auto px-2 '>
            <div className='bg-white my-4 w-full max-w-lg mx-auto rounded p-7 '>
+              <p className='font-semibold text-lg '>Forgot Password</p>
+
 
               <form onSubmit={handleSubmit} className='grid gap-4 py-4'>
                 
@@ -84,39 +83,19 @@ const Login = () => {
                 </div>
 
 
-                <div className='grid gap-1'>
-                    <label htmlFor="password">Password :</label>
-                    <div  className='bg-blue-50 p-2 border rounded flex items-center focus-within:border-[#ffbf00]'>
-                    
-                     <input placeholder='Enter your password...' id='password' name='password' type={showPassword ? "text" : "password"}  className='w-full outline-none' value={data.password} onChange={handleChange} />
-                   
-
-                     <div onClick={()=> setShowPassword(prev => !prev)} className='cursor-pointer'>
-                        {
-                            showPassword ? ( <FaRegEye/> ):(<FaRegEyeSlash/>)
-                        }
-                        
-                    </div>
-                    </div>
-
-                    <Link to={"/forgot-password"} className='block ml-auto hover:text-[#ffbf00]'>Forgot Password?</Link>
-
-                </div>
-
-
                 <button disabled={!validValue} className={` ${validValue ? "hover:bg-green-700 bg-green-800": "bg-gray-500"}  text-white py-2 rounded my-3 tracking-wide  font-semibold `}>
-                  Login
+                  Send Otp
                 </button>
 
               </form>
 
 
               <p>
-                Don't have an Account? ? <Link className='font-semibold text-green-700 hover:text-green-800' to={"/register"}>Register</Link>
+                Already have an Account? ? <Link className='font-semibold text-green-700 hover:text-green-800' to={"/login"}>Login</Link>
               </p>
            </div>
     </section>
   )
 }
 
-export default Login
+export default ForgotPassword
