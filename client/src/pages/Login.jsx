@@ -50,7 +50,12 @@ const Login = () => {
            }
 
            if(response.data.success){
+
             toast.success(response.data.message)
+            localStorage.setItem('accessToken',response.data.data.accesstoken)
+            localStorage.setItem('refreshToken',response.data.data.refreshtoken)
+
+
             setData({
               email: "",
               password: "",
@@ -58,17 +63,12 @@ const Login = () => {
 
             navigate("/")
            }
-
           
          } catch (error) {
           AxiosTostError(error)
          }
 
-         
-
-
-   }
-
+  }
 
 
   return (
@@ -77,7 +77,6 @@ const Login = () => {
 
               <form onSubmit={handleSubmit} className='grid gap-4 py-4'>
                 
-
                  <div className='grid gap-1'>
                     <label htmlFor="email">Email :</label>
                     <input placeholder='Enter your email...' id='email' name='email' type="email"  className='bg-blue-50 p-2 border rounded outline-none focus:border-[#ffbf00]' value={data.email} onChange={handleChange} />

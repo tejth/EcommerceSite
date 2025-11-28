@@ -10,56 +10,56 @@ import { Link , useLocation } from 'react-router-dom'
 
 
 const OtpVerification = () => {
+    const [data, setData] = useState(["","","","","",""])
+    const navigate = useNavigate()
+    const inputRef = useRef([])
+    const location = useLocation()
 
-   const [data,setData] = useState(["","","","","",""])
-   const navigate = useNavigate()
-   const inputRef = useRef([])
-   const location = useLocation()
+    console.log("location",location)
 
+    useEffect(()=>{
+        if(!location?.state?.email){
+            navigate("/forgot-password")
+        }
+    },[])
 
-   useEffect(()=>{
-       if(!location?.state?.email){
-        navigate("/forgot-password")
-       }
-   },[])
+    const validValue = data.every(el => el)
 
- 
-   const validValue = data.every(el => el)
+    const handleSubmit = async(e)=>{
+        e.preventDefault()
 
-
-   const handleSubmit = async(e)=>{
-         e.preventDefault()
-
-         try {
+        try {
             const response = await Axios({
-              ...SummaryApi.forgot_password_otp_verification,
-              data: {
-                otp: data.join(""),
-                email : location?.state?.email
-              }
-           })
+                ...SummaryApi.forgot_password_otp_verification,
+                data : {
+                    otp : data.join(""),
+                    email : location?.state?.email
+                }
+            })
+            
+            if(response.data.error){
+                toast.error(response.data.message)
+            }
 
-           if(response.data.error){
-            toast.error(response.data.message)
-           }
+            if(response.data.success){
+                toast.success(response.data.message)
+                setData(["","","","","",""])
+                navigate("/reset-password",{
+                    state : {
+                        data : response.data,
+                        email : location?.state?.email
+                    }
+                })
+            }
 
-           if(response.data.success){
-            toast.success(response.data.message)
-            setData(["","","","","",""])
-
-            // navigate("/verification-otp")
-           }
-
-          
-         } catch (error) {
-          AxiosTostError(error)
-         }
-
-         
+        } catch (error) {
+            console.log('error',error)
+            AxiosToastError(error)
+        }
 
 
-   }
 
+    }
 
 
   return (
