@@ -5,6 +5,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {FaRegCircleUser} from "react-icons/fa6"
 import useMobile from '../hooks/useMobile'
 import { BsCart4 } from "react-icons/bs";
+import {useSelector} from 'react-redux'
+import {GoTriangleDown , GoTriangleUp} from "react-icons/go"
 
 
 const Header = () => {
@@ -13,6 +15,7 @@ const Header = () => {
   const location = useLocation()
   const isSearchPage = location.pathname === '/search'
   const navigate = useNavigate();
+  const user = useSelector((state)=> state?.user)
 
   const redirectToLoginPage = ()=>{
        navigate('/login')
@@ -70,7 +73,22 @@ const Header = () => {
 
                   {/* Desktop  */}
                   <div className='hidden lg:flex items-center gap-10'>
-                    <button className='text-lg px-2' onClick={redirectToLoginPage}>Login</button>
+                    
+                    {
+                         user?._id ? (
+                           <div>
+                              <div className='flex items-center gap-2'>
+                                  <p>Account</p>
+                                  <GoTriangleDown/>
+                                  {/* <GoTriangleUp/> */}
+                              </div>
+                           </div>
+
+                         ) : (
+                          <button className='text-lg px-2' onClick={redirectToLoginPage}>Login</button>
+                         )
+                    }
+
                     <button className='flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-3 rounded text-white'>
                       {/* add to cart icons  */}
                       <div className='animate-bounce'>
