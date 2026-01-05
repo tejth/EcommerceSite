@@ -82,7 +82,7 @@ const Profile = () => {
                 )
             }
         </div>
-        <button onClick={()=>setProfileAvatarEdit(true)} className='text-sm min-w-20 border border-primary-100 hover:border-primary-200 hover:bg-primary-200 px-3 py-1 rounded-full mt-3'>Edit</button>
+        <button onClick={()=>setProfileAvatarEdit(true)} className='text-sm min-w-20 border border-yellow-300 hover:border-primary-200 hover:bg-primary-200 px-3 py-1 rounded-full mt-3'>Edit</button>
         
         {
             openProfileAvatarEdit && (
@@ -97,7 +97,7 @@ const Profile = () => {
                 <input
                     type='text'
                     placeholder='Enter your name' 
-                    className='p-2 bg-blue-50 outline-none border focus-within:border-primary-200 rounded'
+                    className='p-2 bg-blue-50 outline-none border focus-within:border-yellow-200 rounded'
                     value={userData.name}
                     name='name'
                     onChange={handleOnChange}
@@ -110,7 +110,7 @@ const Profile = () => {
                     type='email'
                     id='email'
                     placeholder='Enter your email' 
-                    className='p-2 bg-blue-50 outline-none border focus-within:border-primary-200 rounded'
+                    className='p-2 bg-blue-50 outline-none border focus-within:border-yellow-200 rounded'
                     value={userData.email}
                     name='email'
                     onChange={handleOnChange}
@@ -123,7 +123,7 @@ const Profile = () => {
                     type='text'
                     id='mobile'
                     placeholder='Enter your mobile' 
-                    className='p-2 bg-blue-50 outline-none border focus-within:border-primary-200 rounded'
+                    className='p-2 bg-blue-50 outline-none border focus-within:border-yellow-200 rounded'
                     value={userData.mobile}
                     name='mobile'
                     onChange={handleOnChange}
@@ -131,7 +131,7 @@ const Profile = () => {
                 />
             </div>
 
-            <button className='border px-4 py-2 font-semibold hover:bg-primary-100 border-primary-100 text-primary-200 hover:text-neutral-800 rounded'>
+            <button className='border px-4 py-2 font-semibold hover:bg-yellow-400 border-yellow-400 text-yellow-400 hover:text-neutral-800 rounded'>
                 {
                     loading ? "Loading..." : "Submit"
                 }
