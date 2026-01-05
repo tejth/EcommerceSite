@@ -106,7 +106,7 @@ const UploadCategoryModel = ({close, fetchData}) => {
                         </div>
                         <label htmlFor='uploadCategoryImage'>
                             <div  className={`
-                            ${!data.name ? "bg-gray-300" : "border-primary-200 hover:bg-primary-100" }  
+                            ${!data.name ? "bg-gray-300" : "border-yellow-400 hover:bg-yellow-200" }  
                                 px-4 py-2 rounded cursor-pointer border font-medium
                             `}>Upload Image</div>
 
@@ -118,7 +118,7 @@ const UploadCategoryModel = ({close, fetchData}) => {
 
                 <button
                     className={`
-                    ${data.name && data.image ? "bg-primary-200 hover:bg-primary-100" : "bg-gray-300 "}
+                    ${data.name && data.image ? "bg-yellow-400 hover:bg-yellow-200" : "bg-gray-300 "}
                     py-2    
                     font-semibold 
                     `}
